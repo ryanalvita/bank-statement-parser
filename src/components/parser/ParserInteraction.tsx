@@ -108,6 +108,38 @@ export default function ParserInteraction() {
           )}
         </section>
       ) : null}
+
+      {transactions.length > 0 ? (
+        <section className="mt-6">
+          <h3 className="text-sm font-medium text-gray-900">Parsed Transactions</h3>
+          <div className="mt-2 overflow-x-auto rounded border border-gray-300">
+            <table className="min-w-full border-collapse text-left text-sm">
+              <thead className="bg-gray-100 text-gray-800">
+                <tr>
+                  <th className="border-b border-gray-300 px-3 py-2">Date</th>
+                  <th className="border-b border-gray-300 px-3 py-2">Time</th>
+                  <th className="border-b border-gray-300 px-3 py-2">Description</th>
+                  <th className="border-b border-gray-300 px-3 py-2">Category</th>
+                  <th className="border-b border-gray-300 px-3 py-2">Outcome</th>
+                  <th className="border-b border-gray-300 px-3 py-2">Income</th>
+                </tr>
+              </thead>
+              <tbody>
+                {transactions.map((transaction, index) => (
+                  <tr key={`${transaction.date}-${transaction.description}-${index}`} className="odd:bg-white even:bg-gray-50">
+                    <td className="border-b border-gray-200 px-3 py-2">{transaction.date}</td>
+                    <td className="border-b border-gray-200 px-3 py-2">{transaction.time}</td>
+                    <td className="border-b border-gray-200 px-3 py-2">{transaction.description}</td>
+                    <td className="border-b border-gray-200 px-3 py-2">{transaction.category}</td>
+                    <td className="border-b border-gray-200 px-3 py-2">{transaction.outcome}</td>
+                    <td className="border-b border-gray-200 px-3 py-2">{transaction.income}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      ) : null}
     </section>
   );
 }
