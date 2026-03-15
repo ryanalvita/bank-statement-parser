@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent } from 'react';
 import { extractPdfText } from '../../lib/pdf/extractPdfText';
 import { isAbnAmroStatement } from '../../lib/parsers/detectAbnAmro';
+import { extractCandidateTransactionLines } from '../../lib/parsers/extractCandidateTransactionLines';
 
 export default function ParserInteraction() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -8,12 +9,14 @@ export default function ParserInteraction() {
   const [isExtracting, setIsExtracting] = useState(false);
   const [error, setError] = useState('');
   const [showDebugText, setShowDebugText] = useState(false);
+  const [candidateLines, setCandidateLines] = useState<string[]>([]);
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
     setSelectedFile(file);
 
     setExtractedPages([]);
+    setCandidateLines([]);
     setError('');
 
     if (!file) {
@@ -36,6 +39,8 @@ export default function ParserInteraction() {
         setError('Unsupported statement format.');
         return;
       }
+
+      setCandidateLines(extractCandidateTransactionLines(result.pages));
     } catch {
       setError('Failed to extract text from PDF. Please try another file.');
     } finally {
@@ -59,6 +64,7 @@ export default function ParserInteraction() {
       <div className="mt-4 space-y-1 text-sm text-gray-600">
         <p>Selected file: {selectedFile?.name || 'None'}</p>
         <p>Extracted pages: {extractedPages.length}</p>
+        <p>Candidate transaction lines: {candidateLines.length}</p>
         {isExtracting ? <p>Extracting text...</p> : null}
         {error ? <p className="text-red-700">{error}</p> : null}
       </div>
