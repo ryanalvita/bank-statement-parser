@@ -40,6 +40,10 @@ module.exports = {
         parser: "@typescript-eslint/parser",
         extraFileExtensions: [".astro"],
       },
+      rules: {
+        // Astro templates use HTML attributes like `class`, not React's `className`.
+        "react/no-unknown-property": "off",
+      },
     },
   ],
   settings: {
