@@ -79,10 +79,10 @@ npm run dev
 │   ├── layouts/
 │   │   └── Layout.astro        # Base page layout
 │   ├── pages/          # Routes (file-based routing)
-│   │   ├── index.astro         # Homepage
+│   │   ├── index.astro         # Parser homepage
 │   │   ├── about.astro         # About page
-│   │   ├── contact.astro      # Contact page
-│   │   ├── features.astro      # Features page
+│   │   ├── feedback.astro      # Feedback links
+│   │   ├── support.astro       # Support page
 │   │   └── example.mdx         # MDX example page
 │   └── styles/
 │       ├── global.css          # Global styles & Tailwind imports
@@ -218,10 +218,10 @@ See `src/pages/example.mdx` for a complete example.
 
 ## 🎯 Pages
 
-- **/** - Homepage with hero, features, and CTA sections
-- **/features** - Features showcase page
+- **/** - Parser homepage with upload and parsing interface
 - **/about** - About page
-- **/contact** - Contact form page
+- **/feedback** - Feedback links
+- **/support** - Support page
 - **/example** - MDX example page demonstrating markdown features
 
 ## 🔧 Configuration

@@ -1,6 +1,6 @@
 export const SITE = {
   title: "Bank Statement Parser",
-  description: "Parse ABN AMRO bank statement PDFs locally in your browser and export transactions.",
+  description: "Parse bank statement PDFs locally in your browser and export transactions.",
   defaultLanguage: "en",
   url: "https://bank-statement-parser.example.com", // Update this with your actual site URL
   author: "Bank Statement Parser",

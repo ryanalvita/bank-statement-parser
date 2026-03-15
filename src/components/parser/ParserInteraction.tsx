@@ -155,7 +155,7 @@ export default function ParserInteraction() {
 							</div>
 							{!bank.enabled ? (
 								<span className="absolute -top-2 right-2 rounded-full border border-gray-200 bg-white px-2 py-0.5 text-[10px] font-medium leading-none text-gray-600 whitespace-nowrap">
-									Coming soon
+									📋 In the backlog
 								</span>
 							) : null}
 						</button>
@@ -168,7 +168,8 @@ export default function ParserInteraction() {
 					2. Upload Statement
 				</h2>
 				<p className="mt-1 text-sm text-gray-600">
-					Select one PDF file. The file stays in your browser.
+					Upload a PDF file. The file will stay in your browser and never
+					submitted.
 				</p>
 
 				<input
