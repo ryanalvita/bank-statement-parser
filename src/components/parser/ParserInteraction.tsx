@@ -1,12 +1,39 @@
-import { useState } from 'react';
+import { useState, type ChangeEvent } from 'react';
+import { extractPdfText } from '../../lib/pdf/extractPdfText';
 
 export default function ParserInteraction() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [parsingResults] = useState<string[]>([]);
+  const [extractedPages, setExtractedPages] = useState<string[]>([]);
+  const [isExtracting, setIsExtracting] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
     setSelectedFile(file);
+
+    setExtractedPages([]);
+    setError('');
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      setIsExtracting(true);
+      const result = await extractPdfText(file);
+      const hasText = result.pages.some((pageText) => pageText.trim().length > 0);
+
+      if (!hasText) {
+        setError('This PDF does not contain selectable text. Only text-based PDFs are supported.');
+        return;
+      }
+
+      setExtractedPages(result.pages);
+    } catch {
+      setError('Failed to extract text from PDF. Please try another file.');
+    } finally {
+      setIsExtracting(false);
+    }
   };
 
   return (
@@ -24,7 +51,9 @@ export default function ParserInteraction() {
 
       <div className="mt-4 space-y-1 text-sm text-gray-600">
         <p>Selected file: {selectedFile?.name || 'None'}</p>
-        <p>Parsed results: {parsingResults.length}</p>
+        <p>Extracted pages: {extractedPages.length}</p>
+        {isExtracting ? <p>Extracting text...</p> : null}
+        {error ? <p className="text-red-700">{error}</p> : null}
       </div>
     </section>
   );
