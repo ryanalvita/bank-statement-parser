@@ -109,6 +109,9 @@ export default function ParserInteraction() {
     <section className="mt-6 rounded-md border border-gray-300 bg-white p-4">
       <h2 className="text-sm font-medium text-gray-900">File Upload</h2>
       <p className="mt-2 text-sm text-gray-600">Select one PDF file. The file stays in your browser.</p>
+      <p className="mt-1 text-sm text-gray-600">
+        The PDF is processed locally in your browser and never uploaded.
+      </p>
 
       <input
         ref={fileInputRef}
