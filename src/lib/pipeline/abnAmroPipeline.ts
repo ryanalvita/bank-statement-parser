@@ -3,11 +3,12 @@ import { transactionsToTsv } from '../output/transactionsToTsv';
 import { isAbnAmroStatement } from '../parsers/detectAbnAmro';
 import { extractCandidateTransactionLines } from '../parsers/extractCandidateTransactionLines';
 import { parseFullStatement } from '../parsers/parseFullStatement';
+import type { BankParser, BankParserResult } from './bankParser';
 
 export const MESSAGE_UNSUPPORTED = 'Unsupported statement format';
 export const MESSAGE_NO_TRANSACTIONS = 'No transactions found';
 
-export interface AbnAmroPipelineResult {
+export interface AbnAmroPipelineResult extends BankParserResult {
   candidateLines: string[];
   transactions: Transaction[];
   tsvOutput: string;
@@ -42,4 +43,11 @@ export const runAbnAmroPipeline = (pages: string[]): AbnAmroPipelineResult => {
     tsvOutput: transactionsToTsv(transactions),
     error: '',
   };
+};
+
+export const abnAmroParser: BankParser = {
+  id: 'abn-amro',
+  name: 'ABN AMRO',
+  detect: isAbnAmroStatement,
+  parse: runAbnAmroPipeline,
 };
