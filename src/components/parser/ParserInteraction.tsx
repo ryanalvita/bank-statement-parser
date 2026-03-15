@@ -1,5 +1,6 @@
 import { useState, type ChangeEvent } from 'react';
 import { extractPdfText } from '../../lib/pdf/extractPdfText';
+import { isAbnAmroStatement } from '../../lib/parsers/detectAbnAmro';
 
 export default function ParserInteraction() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -26,6 +27,11 @@ export default function ParserInteraction() {
 
       if (!hasText) {
         setError('This PDF does not contain selectable text. Only text-based PDFs are supported.');
+        return;
+      }
+
+      if (!isAbnAmroStatement(result.pages)) {
+        setError('Unsupported statement format.');
         return;
       }
 
