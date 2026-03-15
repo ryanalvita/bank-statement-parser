@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent } from 'react';
+import { useRef, useState, type ChangeEvent } from 'react';
 import { extractPdfText } from '../../lib/pdf/extractPdfText';
 import { isAbnAmroStatement } from '../../lib/parsers/detectAbnAmro';
 import { extractCandidateTransactionLines } from '../../lib/parsers/extractCandidateTransactionLines';
@@ -17,6 +17,7 @@ export default function ParserInteraction() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [tsvOutput, setTsvOutput] = useState('');
   const [copyStatus, setCopyStatus] = useState('');
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
@@ -79,12 +80,29 @@ export default function ParserInteraction() {
     }
   };
 
+  const handleReset = () => {
+    setSelectedFile(null);
+    setExtractedPages([]);
+    setCandidateLines([]);
+    setTransactions([]);
+    setTsvOutput('');
+    setError('');
+    setCopyStatus('');
+    setIsExtracting(false);
+    setShowDebugText(false);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   return (
     <section className="mt-6 rounded-md border border-gray-300 bg-white p-4">
       <h2 className="text-sm font-medium text-gray-900">File Upload</h2>
       <p className="mt-2 text-sm text-gray-600">Select one PDF file. The file stays in your browser.</p>
 
       <input
+        ref={fileInputRef}
         type="file"
         accept="application/pdf,.pdf"
         multiple={false}
@@ -122,6 +140,13 @@ export default function ParserInteraction() {
           className="ml-2 rounded border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
         >
           Copy TSV
+        </button>
+        <button
+          type="button"
+          onClick={handleReset}
+          className="ml-2 rounded border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-50"
+        >
+          Reset
         </button>
       </div>
 
