@@ -6,6 +6,10 @@ import { parseFullStatement } from '../../lib/parsers/parseFullStatement';
 import { transactionsToTsv } from '../../lib/output/transactionsToTsv';
 import type { Transaction } from '../../lib/models/transaction';
 
+const MESSAGE_UNSUPPORTED = 'Unsupported statement format';
+const MESSAGE_NON_TEXT = 'Non-text PDF detected';
+const MESSAGE_NO_TRANSACTIONS = 'No transactions found';
+
 export default function ParserInteraction() {
   const sampleFileName = 'mutov828136025_14022026-13032026.pdf';
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -42,17 +46,22 @@ export default function ParserInteraction() {
       const hasText = result.pages.some((pageText) => pageText.trim().length > 0);
 
       if (!hasText) {
-        setError('This PDF does not contain selectable text. Only text-based PDFs are supported.');
+        setError(MESSAGE_NON_TEXT);
         return;
       }
 
       if (!isAbnAmroStatement(result.pages)) {
-        setError('Unsupported statement format.');
+        setError(MESSAGE_UNSUPPORTED);
         return;
       }
 
       const lines = extractCandidateTransactionLines(result.pages);
       const parsedTransactions = parseFullStatement(lines);
+
+      if (parsedTransactions.length === 0) {
+        setError(MESSAGE_NO_TRANSACTIONS);
+      }
+
       setCandidateLines(lines);
       setTransactions(parsedTransactions);
       setTsvOutput(transactionsToTsv(parsedTransactions));
