@@ -10,9 +10,14 @@ const PAGE_HEADER_PREFIX =
 const FOOTER_PATTERNS = [
   /^eindtotaal\b/i,
   /^totaal\b/i,
+  /^total\b/i,
+  /^total amount debited\b/i,
+  /^total amount credited\b/i,
   /^nieuw\s+saldo\b/i,
   /^saldo\b/i,
   /^pagina\s+\d+/i,
+  /^number of debit transactions\b/i,
+  /^number of credit transactions\b/i,
 ];
 
 const NOISE_PATTERNS = [

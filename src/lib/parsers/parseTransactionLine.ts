@@ -2,9 +2,9 @@ import type { Transaction } from '../models/transaction';
 
 const DATE_AT_START = /^(\d{2}-\d{2}(?:-\d{4})?)\b/;
 const AMOUNT_PATTERN = /([+-]?\s?\d{1,3}(?:\.\d{3})*,\d{2})\b/g;
-const TIME_PATTERN = /\b(\d{2}:\d{2})\b/;
-const OUTCOME_HINTS = /\b(af|debit|debited|afschrijving|incasso|bea)\b/i;
-const INCOME_HINTS = /\b(bij|credit|credited|bijschrijving|salaris)\b/i;
+const OUTCOME_HINTS = /\b(af|debit|debited|afschrijving|incasso|bea|ideal|wero|google pay|takeaway)\b/i;
+const INCOME_HINTS = /\b(bij|credit|credited|bijschrijving|salaris|salary|aab inz|tikkie id|personeels)\b/i;
+const SUMMARY_MARKER_PATTERN = /\b(number of debit transactions|number of credit transactions|total amount debited|total amount credited)\b/i;
 
 const toNumber = (rawAmount: string): number => {
   const normalized = rawAmount.replace(/\./g, '').replace(',', '.');
@@ -22,11 +22,13 @@ const normalizeDate = (rawDate: string): string => {
   return `${yyyy}-${mm}-${dd}`;
 };
 
-const cleanDescription = (fullText: string, date: string, rawAmount: string, time: string): string => {
-  return fullText
+const cleanDescription = (fullText: string, date: string, rawAmount: string): string => {
+  const markerIndex = fullText.search(SUMMARY_MARKER_PATTERN);
+  const textWithoutSummary = markerIndex >= 0 ? fullText.slice(0, markerIndex).trim() : fullText;
+
+  return textWithoutSummary
     .replace(date, '')
     .replace(rawAmount, '')
-    .replace(time, '')
     .replace(/\s+/g, ' ')
     .trim();
 };
@@ -54,7 +56,7 @@ export const parseTransactionLine = (line: string): Transaction | null => {
   }
 
   const date = dateMatch[1];
-  const rawAmount = amountMatches[amountMatches.length - 1][1];
+  const rawAmount = amountMatches[0][1];
   const amountValue = toNumber(rawAmount);
 
   if (!Number.isFinite(amountValue)) {
@@ -62,17 +64,30 @@ export const parseTransactionLine = (line: string): Transaction | null => {
   }
 
   const amount = Math.abs(amountValue).toFixed(2);
-  const time = fullText.match(TIME_PATTERN)?.[1] ?? '';
-  const description = cleanDescription(fullText, date, rawAmount, time);
+  const description = cleanDescription(fullText, date, rawAmount);
 
   const firstLineAndText = `${firstLine} ${fullText}`;
   const hasOutcomeHint = OUTCOME_HINTS.test(firstLineAndText);
   const hasIncomeHint = INCOME_HINTS.test(firstLineAndText);
-  const isMoneyOut = amountValue < 0 || (hasOutcomeHint && !hasIncomeHint);
+  let isMoneyOut = true;
+
+  if (amountValue < 0) {
+    isMoneyOut = true;
+  } else if (hasIncomeHint && !hasOutcomeHint) {
+    isMoneyOut = false;
+  } else if (hasOutcomeHint && !hasIncomeHint) {
+    isMoneyOut = true;
+  } else if (hasIncomeHint && hasOutcomeHint) {
+    // Conservative fallback: explicit income markers win.
+    isMoneyOut = false;
+  } else {
+    // Unknown positive amounts default to outcome for safer budgeting.
+    isMoneyOut = true;
+  }
 
   return {
     date: normalizeDate(date),
-    time,
+    time: '',
     description,
     category: '',
     outcome: isMoneyOut ? amount : '',
