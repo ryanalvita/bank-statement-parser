@@ -1,4 +1,0 @@
-01-01-2026 BEA Grocery Store 10:15 12,40
-Order reference A1B2C3
-02-01-2026 Salary Payment 2500,00
-03-01-2026 SEPA Incasso Utilities 45,00
