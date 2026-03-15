@@ -1,6 +1,6 @@
 import { useRef, useState, type ChangeEvent } from 'react';
 import { extractPdfText } from '../../lib/pdf/extractPdfText';
-import { abnAmroParser } from '../../lib/pipeline/abnAmroPipeline';
+import { runAbnAmroPipelineFromExtraction } from '../../lib/pipeline/abnAmroPipeline';
 import type { Transaction } from '../../lib/models/transaction';
 
 const MESSAGE_NON_TEXT = 'Non-text PDF detected';
@@ -45,7 +45,7 @@ export default function ParserInteraction() {
         return;
       }
 
-      const pipelineResult = abnAmroParser.parse(result.pages);
+      const pipelineResult = runAbnAmroPipelineFromExtraction(result);
       setCandidateLines(pipelineResult.candidateLines);
       setTransactions(pipelineResult.transactions);
       setTsvOutput(pipelineResult.tsvOutput);
