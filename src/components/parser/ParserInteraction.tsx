@@ -23,6 +23,8 @@ export default function ParserInteraction() {
     try {
       setIsExtracting(true);
       const result = await extractPdfText(file);
+      setExtractedPages(result.pages);
+
       const hasText = result.pages.some((pageText) => pageText.trim().length > 0);
 
       if (!hasText) {
@@ -34,8 +36,6 @@ export default function ParserInteraction() {
         setError('Unsupported statement format.');
         return;
       }
-
-      setExtractedPages(result.pages);
     } catch {
       setError('Failed to extract text from PDF. Please try another file.');
     } finally {

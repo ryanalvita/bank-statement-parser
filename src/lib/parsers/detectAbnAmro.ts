@@ -1,6 +1,17 @@
-const MARKERS = [/\babn\s*amro\b/i, /\brekening\b/i, /\biban\b/i];
+const REQUIRED_MARKER = /\babn\s*amro\b/i;
+const SUPPORTING_MARKERS = [
+  /\biban\b/i,
+  /\brekening\b/i,
+  /\bmutatie(?:overzicht)?\b/i,
+  /\btransactie(?:overzicht)?\b/i,
+  /\bafschrift\b/i,
+];
 
 export const isAbnAmroStatement = (pages: string[]): boolean => {
   const content = pages.join('\n');
-  return MARKERS.every((pattern) => pattern.test(content));
+  if (!REQUIRED_MARKER.test(content)) {
+    return false;
+  }
+
+  return SUPPORTING_MARKERS.some((pattern) => pattern.test(content));
 };
