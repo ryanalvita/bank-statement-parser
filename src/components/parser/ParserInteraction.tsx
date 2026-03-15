@@ -3,6 +3,7 @@ import { extractPdfText } from '../../lib/pdf/extractPdfText';
 import { isAbnAmroStatement } from '../../lib/parsers/detectAbnAmro';
 import { extractCandidateTransactionLines } from '../../lib/parsers/extractCandidateTransactionLines';
 import { parseFullStatement } from '../../lib/parsers/parseFullStatement';
+import { transactionsToTsv } from '../../lib/output/transactionsToTsv';
 import type { Transaction } from '../../lib/models/transaction';
 
 export default function ParserInteraction() {
@@ -14,6 +15,7 @@ export default function ParserInteraction() {
   const [showDebugText, setShowDebugText] = useState(false);
   const [candidateLines, setCandidateLines] = useState<string[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [tsvOutput, setTsvOutput] = useState('');
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
@@ -22,6 +24,7 @@ export default function ParserInteraction() {
     setExtractedPages([]);
     setCandidateLines([]);
     setTransactions([]);
+    setTsvOutput('');
     setError('');
 
     if (!file) {
@@ -46,8 +49,10 @@ export default function ParserInteraction() {
       }
 
       const lines = extractCandidateTransactionLines(result.pages);
+      const parsedTransactions = parseFullStatement(lines);
       setCandidateLines(lines);
-      setTransactions(parseFullStatement(lines));
+      setTransactions(parsedTransactions);
+      setTsvOutput(transactionsToTsv(parsedTransactions));
     } catch {
       setError('Failed to extract text from PDF. Please try another file.');
     } finally {
@@ -73,6 +78,7 @@ export default function ParserInteraction() {
         <p>Extracted pages: {extractedPages.length}</p>
         <p>Candidate transaction lines: {candidateLines.length}</p>
         <p>Parsed transactions: {transactions.length}</p>
+        <p>TSV rows: {tsvOutput ? tsvOutput.split('\n').length - 1 : 0}</p>
         {selectedFile?.name === sampleFileName ? (
           <p className={candidateLines.length > 0 ? 'text-green-700' : 'text-red-700'}>
             Sample testcase ({sampleFileName}): {candidateLines.length > 0 ? 'PASS' : 'FAIL'}
