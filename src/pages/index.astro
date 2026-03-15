@@ -1,23 +1,13 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Header from "../components/Header.astro";
-import Hero from "../components/Hero.astro";
-import Features from "../components/Features.astro";
-import CTA from "../components/CTA.astro";
-import Footer from "../components/Footer.astro";
-import { SITE } from "../config/site.mjs";
 ---
 
 <Layout
-  title={SITE.title}
-  description="A minimal, modern starter template for building fast websites with Astro. Includes React, Tailwind CSS, Framer Motion, and more."
-  canonicalURL={SITE.url}
+  title="Bank Statement Parser"
+  description="A simple app shell for the bank statement parser."
 >
-  <Header />
-  <main id="main-content" role="main">
-    <Hero />
-    <Features />
-    <CTA />
+  <main id="main-content" role="main" class="mx-auto max-w-3xl px-4 py-10">
+    <h1 class="text-3xl font-semibold text-gray-900">Bank Statement Parser</h1>
+    <p class="mt-2 text-sm text-gray-600">App shell ready for parser features.</p>
   </main>
-  <Footer />
 </Layout>
