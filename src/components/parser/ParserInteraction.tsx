@@ -39,7 +39,6 @@ export default function ParserInteraction() {
 	const [selectedBank, setSelectedBank] = useState(BANK_OPTIONS[0].id);
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 	const [extractedPages, setExtractedPages] = useState<string[]>([]);
-	const [isExtracting, setIsExtracting] = useState(false);
 	const [error, setError] = useState("");
 	const [transactions, setTransactions] = useState<Transaction[]>([]);
 	const [tsvOutput, setTsvOutput] = useState("");
@@ -63,7 +62,6 @@ export default function ParserInteraction() {
 		}
 
 		try {
-			setIsExtracting(true);
 			const result = await extractPdfText(file);
 			setExtractedPages(result.pages);
 
@@ -84,8 +82,6 @@ export default function ParserInteraction() {
 		} catch {
 			setError("Failed to extract text from PDF. Please try another file.");
 			setCopyStatus("");
-		} finally {
-			setIsExtracting(false);
 		}
 	};
 
@@ -111,7 +107,6 @@ export default function ParserInteraction() {
 		setTsvOutput("");
 		setError("");
 		setCopyStatus("");
-		setIsExtracting(false);
 
 		if (fileInputRef.current) {
 			fileInputRef.current.value = "";
@@ -183,9 +178,6 @@ export default function ParserInteraction() {
 				/>
 			</div>
 
-			{isExtracting ? (
-				<p className="mt-1 text-sm text-gray-700">Extracting text...</p>
-			) : null}
 			{error ? <p className="mt-2 text-sm text-red-700">{error}</p> : null}
 
 			<div className="mt-4 flex flex-wrap gap-2">
