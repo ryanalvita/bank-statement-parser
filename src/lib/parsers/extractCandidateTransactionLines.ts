@@ -35,18 +35,22 @@ const looksLikeTransactionLine = (line: string): boolean => {
 export const extractCandidateTransactionLines = (pages: string[]): string[] => {
   const lines = pages
     .flatMap((page) => page.split(/\r?\n/g))
-    .map((line) => line.replace(/\s+/g, ' ').trim())
+    .map((line) => line.trim())
     .filter(Boolean);
 
   const candidates: string[] = [];
   let inTransactionSection = false;
+  let hasSeenTransactionLine = false;
 
   for (const line of lines) {
-    if (isHeaderLine(line) || looksLikeTransactionLine(line)) {
+    const normalizedLine = line.replace(/\s+/g, ' ').trim();
+
+    if (isHeaderLine(normalizedLine) || looksLikeTransactionLine(normalizedLine)) {
       inTransactionSection = true;
 
-      if (looksLikeTransactionLine(line)) {
+      if (looksLikeTransactionLine(normalizedLine)) {
         candidates.push(line);
+        hasSeenTransactionLine = true;
         continue;
       }
     }
@@ -55,16 +59,23 @@ export const extractCandidateTransactionLines = (pages: string[]): string[] => {
       continue;
     }
 
-    if (isFooterLine(line)) {
+    if (isFooterLine(normalizedLine)) {
       inTransactionSection = false;
+      hasSeenTransactionLine = false;
       continue;
     }
 
-    if (isNoiseLine(line)) {
+    if (isNoiseLine(normalizedLine) || isHeaderLine(normalizedLine)) {
       continue;
     }
 
-    if (looksLikeTransactionLine(line) || candidates.length > 0) {
+    if (looksLikeTransactionLine(normalizedLine)) {
+      candidates.push(line);
+      hasSeenTransactionLine = true;
+      continue;
+    }
+
+    if (hasSeenTransactionLine) {
       candidates.push(line);
     }
   }
