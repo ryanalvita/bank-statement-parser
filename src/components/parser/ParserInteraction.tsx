@@ -6,6 +6,7 @@ export default function ParserInteraction() {
   const [extractedPages, setExtractedPages] = useState<string[]>([]);
   const [isExtracting, setIsExtracting] = useState(false);
   const [error, setError] = useState('');
+  const [showDebugText, setShowDebugText] = useState(false);
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
@@ -55,6 +56,33 @@ export default function ParserInteraction() {
         {isExtracting ? <p>Extracting text...</p> : null}
         {error ? <p className="text-red-700">{error}</p> : null}
       </div>
+
+      <div className="mt-4">
+        <button
+          type="button"
+          onClick={() => setShowDebugText((value) => !value)}
+          className="rounded border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-50"
+        >
+          {showDebugText ? 'Hide Debug Text' : 'Show Debug Text'}
+        </button>
+      </div>
+
+      {showDebugText ? (
+        <section className="mt-4 space-y-3">
+          {extractedPages.length === 0 ? (
+            <p className="text-sm text-gray-600">No extracted text available yet.</p>
+          ) : (
+            extractedPages.map((pageText, index) => (
+              <article key={index} className="rounded border border-gray-200 bg-gray-50 p-3">
+                <h3 className="text-sm font-medium text-gray-800">Page {index + 1}</h3>
+                <pre className="mt-2 whitespace-pre-wrap break-words text-xs text-gray-700">
+                  {pageText || '[No text found on this page]'}
+                </pre>
+              </article>
+            ))
+          )}
+        </section>
+      ) : null}
     </section>
   );
 }
