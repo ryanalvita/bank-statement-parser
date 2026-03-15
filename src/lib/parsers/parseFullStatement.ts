@@ -38,14 +38,15 @@ const mergeMultilineDescriptions = (candidateLines: string[]): string[] => {
 export const parseFullStatement = (candidateLines: string[]): Transaction[] => {
   const mergedLines = mergeMultilineDescriptions(candidateLines);
   const transactions: Transaction[] = [];
-  const seenRawLines = new Set<string>();
+  let previousRawKey = '';
 
   for (const line of mergedLines) {
     const rawKey = line.replace(/\s+/g, ' ').trim();
-    if (seenRawLines.has(rawKey)) {
+    // Guard only against immediate duplicate rows introduced by extraction artifacts.
+    if (rawKey && rawKey === previousRawKey) {
       continue;
     }
-    seenRawLines.add(rawKey);
+    previousRawKey = rawKey;
 
     const parsed = parseTransactionLine(line);
     if (!parsed) {
