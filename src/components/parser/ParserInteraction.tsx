@@ -16,6 +16,7 @@ export default function ParserInteraction() {
   const [candidateLines, setCandidateLines] = useState<string[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [tsvOutput, setTsvOutput] = useState('');
+  const [copyStatus, setCopyStatus] = useState('');
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
@@ -26,6 +27,7 @@ export default function ParserInteraction() {
     setTransactions([]);
     setTsvOutput('');
     setError('');
+    setCopyStatus('');
 
     if (!file) {
       return;
@@ -53,10 +55,27 @@ export default function ParserInteraction() {
       setCandidateLines(lines);
       setTransactions(parsedTransactions);
       setTsvOutput(transactionsToTsv(parsedTransactions));
+      setCopyStatus('');
     } catch {
       setError('Failed to extract text from PDF. Please try another file.');
+      setCopyStatus('');
     } finally {
       setIsExtracting(false);
+    }
+  };
+
+  const handleCopyTsv = async () => {
+    if (!tsvOutput) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(tsvOutput);
+      setCopyStatus('TSV copied to clipboard.');
+      setError('');
+    } catch {
+      setCopyStatus('');
+      setError('Unable to copy TSV to clipboard.');
     }
   };
 
@@ -96,7 +115,17 @@ export default function ParserInteraction() {
         >
           {showDebugText ? 'Hide Debug Text' : 'Show Debug Text'}
         </button>
+        <button
+          type="button"
+          onClick={handleCopyTsv}
+          disabled={!tsvOutput}
+          className="ml-2 rounded border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          Copy TSV
+        </button>
       </div>
+
+      {copyStatus ? <p className="mt-2 text-sm text-green-700">{copyStatus}</p> : null}
 
       {showDebugText ? (
         <section className="mt-4 space-y-3">
