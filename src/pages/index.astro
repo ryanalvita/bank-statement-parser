@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import ParserInteraction from "../components/parser/ParserInteraction";
 ---
 
 <Layout
@@ -15,9 +16,6 @@ import Layout from "../layouts/Layout.astro";
       Your PDF is processed locally in your browser and is never uploaded.
     </p>
 
-    <section class="mt-6 rounded-md border border-gray-300 bg-white p-4">
-      <h2 class="text-sm font-medium text-gray-900">File Upload</h2>
-      <p class="mt-2 text-sm text-gray-600">Upload placeholder. PDF picker will be added in the next step.</p>
-    </section>
+    <ParserInteraction client:load />
   </main>
 </Layout>
