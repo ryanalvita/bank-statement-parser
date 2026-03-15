@@ -2,6 +2,7 @@ const HEADER_MARKERS = [/\bdatum\b/i, /\bomschrijving\b/i, /\bbedrag\b/i, /\bbij
 const DATE_TOKEN = /\d{2}-\d{2}(?:-\d{4})?\b/;
 const AMOUNT_TOKEN = /[+-]?\s?\d{1,3}(?:\.\d{3})*,\d{2}\b/;
 const BALANCE_SUMMARY_PATTERN = /\bbalance\s+\d{2}-\d{2}(?:-\d{4})?\b/i;
+const DATE_INTERVAL_PATTERN = /\bdate\s+interval\b/i;
 const PAGE_HEADER_PREFIX =
   /^page\s+\d+\s+of\s+\d+\s+date\s+description\s+amount\s+debited\s+amount\s+credited\s*/i;
 
@@ -32,14 +33,12 @@ const isFooterLine = (line: string): boolean => FOOTER_PATTERNS.some((pattern) =
 const isNoiseLine = (line: string): boolean => NOISE_PATTERNS.some((pattern) => pattern.test(line));
 
 const looksLikeTransactionLine = (line: string): boolean => {
-  if (BALANCE_SUMMARY_PATTERN.test(line)) {
+  if (BALANCE_SUMMARY_PATTERN.test(line) || DATE_INTERVAL_PATTERN.test(line)) {
     return false;
   }
 
   const normalized = line.replace(PAGE_HEADER_PREFIX, '').trim();
-  const startsWithDate = /^\d{2}-\d{2}(?:-\d{4})?\b/.test(normalized);
-
-  return startsWithDate && DATE_TOKEN.test(normalized) && AMOUNT_TOKEN.test(normalized);
+  return DATE_TOKEN.test(normalized) && AMOUNT_TOKEN.test(normalized);
 };
 
 export const extractCandidateTransactionLines = (pages: string[]): string[] => {
