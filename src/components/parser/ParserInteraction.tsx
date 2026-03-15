@@ -1,14 +1,9 @@
 import { useRef, useState, type ChangeEvent } from 'react';
 import { extractPdfText } from '../../lib/pdf/extractPdfText';
-import { isAbnAmroStatement } from '../../lib/parsers/detectAbnAmro';
-import { extractCandidateTransactionLines } from '../../lib/parsers/extractCandidateTransactionLines';
-import { parseFullStatement } from '../../lib/parsers/parseFullStatement';
-import { transactionsToTsv } from '../../lib/output/transactionsToTsv';
+import { runAbnAmroPipeline } from '../../lib/pipeline/abnAmroPipeline';
 import type { Transaction } from '../../lib/models/transaction';
 
-const MESSAGE_UNSUPPORTED = 'Unsupported statement format';
 const MESSAGE_NON_TEXT = 'Non-text PDF detected';
-const MESSAGE_NO_TRANSACTIONS = 'No transactions found';
 
 export default function ParserInteraction() {
   const sampleFileName = 'mutov828136025_14022026-13032026.pdf';
@@ -50,21 +45,11 @@ export default function ParserInteraction() {
         return;
       }
 
-      if (!isAbnAmroStatement(result.pages)) {
-        setError(MESSAGE_UNSUPPORTED);
-        return;
-      }
-
-      const lines = extractCandidateTransactionLines(result.pages);
-      const parsedTransactions = parseFullStatement(lines);
-
-      if (parsedTransactions.length === 0) {
-        setError(MESSAGE_NO_TRANSACTIONS);
-      }
-
-      setCandidateLines(lines);
-      setTransactions(parsedTransactions);
-      setTsvOutput(transactionsToTsv(parsedTransactions));
+      const pipelineResult = runAbnAmroPipeline(result.pages);
+      setCandidateLines(pipelineResult.candidateLines);
+      setTransactions(pipelineResult.transactions);
+      setTsvOutput(pipelineResult.tsvOutput);
+      setError(pipelineResult.error);
       setCopyStatus('');
     } catch {
       setError('Failed to extract text from PDF. Please try another file.');
