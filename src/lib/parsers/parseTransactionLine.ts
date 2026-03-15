@@ -2,6 +2,7 @@ import type { Transaction } from '../models/transaction';
 
 const DATE_AT_START = /^(\d{2}-\d{2}(?:-\d{4})?)\b/;
 const AMOUNT_PATTERN = /([+-]?\s?\d{1,3}(?:\.\d{3})*,\d{2})\b/g;
+const TIME_PATTERN = /\b(\d{2}:\d{2})\b/;
 const OUTCOME_HINTS = /\b(af|debit|debited|afschrijving|incasso|bea)\b/i;
 const INCOME_HINTS = /\b(bij|credit|credited|bijschrijving|salaris)\b/i;
 
@@ -11,8 +12,23 @@ const toNumber = (rawAmount: string): number => {
   return Number.isFinite(value) ? value : Number.NaN;
 };
 
-const cleanDescription = (fullText: string, date: string): string => {
-  return fullText.replace(date, '').replace(/\s+/g, ' ').trim();
+const normalizeDate = (rawDate: string): string => {
+  const match = rawDate.match(/^(\d{2})-(\d{2})-(\d{4})$/);
+  if (!match) {
+    return rawDate;
+  }
+
+  const [, dd, mm, yyyy] = match;
+  return `${yyyy}-${mm}-${dd}`;
+};
+
+const cleanDescription = (fullText: string, date: string, rawAmount: string, time: string): string => {
+  return fullText
+    .replace(date, '')
+    .replace(rawAmount, '')
+    .replace(time, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 };
 
 export const parseTransactionLine = (line: string): Transaction | null => {
@@ -46,7 +62,8 @@ export const parseTransactionLine = (line: string): Transaction | null => {
   }
 
   const amount = Math.abs(amountValue).toFixed(2);
-  const description = cleanDescription(fullText, date);
+  const time = fullText.match(TIME_PATTERN)?.[1] ?? '';
+  const description = cleanDescription(fullText, date, rawAmount, time);
 
   const firstLineAndText = `${firstLine} ${fullText}`;
   const hasOutcomeHint = OUTCOME_HINTS.test(firstLineAndText);
@@ -54,8 +71,8 @@ export const parseTransactionLine = (line: string): Transaction | null => {
   const isMoneyOut = amountValue < 0 || (hasOutcomeHint && !hasIncomeHint);
 
   return {
-    date,
-    time: '',
+    date: normalizeDate(date),
+    time,
     description,
     category: '',
     outcome: isMoneyOut ? amount : '',

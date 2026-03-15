@@ -38,20 +38,19 @@ const mergeMultilineDescriptions = (candidateLines: string[]): string[] => {
 export const parseFullStatement = (candidateLines: string[]): Transaction[] => {
   const mergedLines = mergeMultilineDescriptions(candidateLines);
   const transactions: Transaction[] = [];
-  const seen = new Set<string>();
+  const seenRawLines = new Set<string>();
 
   for (const line of mergedLines) {
+    const rawKey = line.replace(/\s+/g, ' ').trim();
+    if (seenRawLines.has(rawKey)) {
+      continue;
+    }
+    seenRawLines.add(rawKey);
+
     const parsed = parseTransactionLine(line);
     if (!parsed) {
       continue;
     }
-
-    const fingerprint = `${parsed.date}|${parsed.description}|${parsed.outcome}|${parsed.income}`;
-    if (seen.has(fingerprint)) {
-      continue;
-    }
-
-    seen.add(fingerprint);
     transactions.push(parsed);
   }
 
