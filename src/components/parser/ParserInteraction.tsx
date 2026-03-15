@@ -13,26 +13,36 @@ type BankOption = {
 };
 
 const BANK_OPTIONS: BankOption[] = [
-	{
-		id: "abn-amro",
-		name: "ABN AMRO",
-		logo: "/banks/abn_amro_logo.svg",
-		enabled: true,
-	},
-	{ id: "ing", name: "ING", logo: "/banks/ing_logo.svg", enabled: false },
-	{
-		id: "rabobank",
-		name: "Rabobank",
-		logo: "/banks/rabobank_logo.svg",
-		enabled: false,
-	},
-	{
-		id: "asn-bank",
-		name: "ASN Bank",
-		logo: "/banks/asn_logo.svg",
-		enabled: false,
-	},
-	{ id: "bunq", name: "bunq", logo: "/banks/bunq_logo.svg", enabled: false },
+		{
+			id: "abn-amro",
+			name: "ABN AMRO",
+			logo: "/bank-statement-parser/banks/abn_amro_logo.svg",
+			enabled: true,
+		},
+		{
+			id: "ing",
+			name: "ING",
+			logo: "/bank-statement-parser/banks/ing_logo.svg",
+			enabled: false,
+		},
+		{
+			id: "rabobank",
+			name: "Rabobank",
+			logo: "/bank-statement-parser/banks/rabobank_logo.svg",
+			enabled: false,
+		},
+		{
+			id: "asn-bank",
+			name: "ASN Bank",
+			logo: "/bank-statement-parser/banks/asn_logo.svg",
+			enabled: false,
+		},
+		{
+			id: "bunq",
+			name: "bunq",
+			logo: "/bank-statement-parser/banks/bunq_logo.svg",
+			enabled: false,
+		},
 ];
 
 export default function ParserInteraction() {

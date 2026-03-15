@@ -1,5 +1,11 @@
 ---
 import { Icon } from "astro-icon/components";
+
+const normalizePath = (path) =>
+	path !== "/" && path.endsWith("/") ? path.slice(0, -1) : path;
+
+const currentPath = normalizePath(Astro.url.pathname);
+const isCurrent = (path) => currentPath === normalizePath(path);
 ---
 
 <header
@@ -36,7 +42,7 @@ import { Icon } from "astro-icon/components";
 				<a
 					href="/bank-statement-parser"
 					class="text-gray-600 hover:text-gray-900 transition-colors"
-					aria-current={Astro.url.pathname === "/" ? "page" : undefined}
+					aria-current={isCurrent("/bank-statement-parser") ? "page" : undefined}
 				>
 					Home
 				</a>
@@ -45,7 +51,7 @@ import { Icon } from "astro-icon/components";
 				<a
 					href="/bank-statement-parser/about"
 					class="text-gray-600 hover:text-gray-900 transition-colors"
-					aria-current={Astro.url.pathname === "/about" ? "page" : undefined}
+					aria-current={isCurrent("/bank-statement-parser/about") ? "page" : undefined}
 				>
 					About
 				</a>
@@ -54,7 +60,7 @@ import { Icon } from "astro-icon/components";
 				<a
 					href="/bank-statement-parser/feedback"
 					class="text-gray-600 hover:text-gray-900 transition-colors"
-					aria-current={Astro.url.pathname === "/feedback" ? "page" : undefined}
+					aria-current={isCurrent("/bank-statement-parser/feedback") ? "page" : undefined}
 				>
 					Feedback
 				</a>
@@ -63,7 +69,7 @@ import { Icon } from "astro-icon/components";
 				<a
 					href="/bank-statement-parser/support"
 					class="text-gray-600 hover:text-gray-900 transition-colors"
-					aria-current={Astro.url.pathname === "/support" ? "page" : undefined}
+					aria-current={isCurrent("/bank-statement-parser/support") ? "page" : undefined}
 				>
 					Support
 				</a>
@@ -84,7 +90,7 @@ import { Icon } from "astro-icon/components";
 					href="/bank-statement-parser/feedback"
 					class="block px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
 					role="menuitem"
-					aria-current={Astro.url.pathname === "/feedback" ? "page" : undefined}
+					aria-current={isCurrent("/bank-statement-parser/feedback") ? "page" : undefined}
 				>
 					Feedback
 				</a>
@@ -94,7 +100,7 @@ import { Icon } from "astro-icon/components";
 					href="/bank-statement-parser/about"
 					class="block px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
 					role="menuitem"
-					aria-current={Astro.url.pathname === "/about" ? "page" : undefined}
+					aria-current={isCurrent("/bank-statement-parser/about") ? "page" : undefined}
 				>
 					About
 				</a>
@@ -104,7 +110,7 @@ import { Icon } from "astro-icon/components";
 					href="/bank-statement-parser/support"
 					class="block px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
 					role="menuitem"
-					aria-current={Astro.url.pathname === "/support" ? "page" : undefined}
+					aria-current={isCurrent("/bank-statement-parser/support") ? "page" : undefined}
 				>
 					Support
 				</a>
@@ -128,8 +134,8 @@ import { Icon } from "astro-icon/components";
 		// Close menu when clicking outside
 		document.addEventListener("click", (e) => {
 			if (
-				!menuButton.contains(e.target as Node) &&
-				!mobileMenu.contains(e.target as Node) &&
+				!menuButton.contains(e.target) &&
+				!mobileMenu.contains(e.target) &&
 				!mobileMenu.classList.contains("hidden")
 			) {
 				menuButton.setAttribute("aria-expanded", "false");

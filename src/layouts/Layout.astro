@@ -24,17 +24,20 @@ const {
   lang = SITE.defaultLanguage,
 } = Astro.props;
 
+const faviconPath = "/bank-statement-parser/favicon.svg";
+
 // Construct full URLs
 const currentPath = Astro.url.pathname;
 const canonicalPath = canonicalURL || currentPath;
-const siteURL = new URL(canonicalPath, SITE.url);
+const siteBaseURL = new URL(SITE.base, SITE.url);
+const siteURL = new URL(canonicalPath, siteBaseURL);
 
 // Handle image URLs - support both absolute URLs and relative paths
 const getFullImageUrl = (image: string): string => {
   if (image.startsWith('http://') || image.startsWith('https://')) {
     return image;
   }
-  return new URL(image, SITE.url).href;
+  return new URL(image, siteBaseURL).href;
 };
 
 const fullOgImage = getFullImageUrl(ogImage);
@@ -52,7 +55,7 @@ const robotsContent = [
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" type="image/svg+xml" href={faviconPath} />
 		<meta name="generator" content={Astro.generator} />
 		
 		<!-- Resource Hints -->
@@ -60,7 +63,7 @@ const robotsContent = [
 		<link rel="dns-prefetch" href="https://fonts.googleapis.com" />
 		
 		<!-- Preload Critical Resources -->
-		<link rel="preload" href="/favicon.svg" as="image" type="image/svg+xml" />
+		<link rel="preload" href={faviconPath} as="image" type="image/svg+xml" />
 		
 		<!-- Primary Meta Tags -->
 		<title>{title}</title>
