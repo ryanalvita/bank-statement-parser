@@ -1,5 +1,6 @@
 const HEADER_MARKERS = [/\bdatum\b/i, /\bomschrijving\b/i, /\bbedrag\b/i, /\bbij\b/i];
 const DATE_TOKEN = /\d{2}-\d{2}(?:-\d{4})?\b/;
+const DATE_AT_START = /^\d{2}-\d{2}(?:-\d{4})?\b/;
 const AMOUNT_TOKEN = /[+-]?\s?\d{1,3}(?:\.\d{3})*,\d{2}\b/;
 const BALANCE_SUMMARY_PATTERN = /\bbalance\s+\d{2}-\d{2}(?:-\d{4})?\b/i;
 const DATE_INTERVAL_PATTERN = /\bdate\s+interval\b/i;
@@ -53,11 +54,13 @@ export const extractCandidateTransactionLines = (pages: string[]): string[] => {
 
   for (const line of lines) {
     const normalizedLine = line.replace(/\s+/g, ' ').trim();
+    const withoutPagePrefix = normalizedLine.replace(PAGE_HEADER_PREFIX, '').trim();
+    const startsWithTransactionDate = DATE_AT_START.test(withoutPagePrefix);
 
-    if (isHeaderLine(normalizedLine) || looksLikeTransactionLine(normalizedLine)) {
+    if (isHeaderLine(normalizedLine) || startsWithTransactionDate || looksLikeTransactionLine(normalizedLine)) {
       inTransactionSection = true;
 
-      if (looksLikeTransactionLine(normalizedLine)) {
+      if (startsWithTransactionDate || looksLikeTransactionLine(normalizedLine)) {
         candidates.push(line);
         hasSeenTransactionLine = true;
         continue;
@@ -78,7 +81,7 @@ export const extractCandidateTransactionLines = (pages: string[]): string[] => {
       continue;
     }
 
-    if (looksLikeTransactionLine(normalizedLine)) {
+    if (startsWithTransactionDate || looksLikeTransactionLine(normalizedLine)) {
       candidates.push(line);
       hasSeenTransactionLine = true;
       continue;
