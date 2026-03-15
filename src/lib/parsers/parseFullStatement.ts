@@ -9,10 +9,14 @@ const TABLE_HEADER_INLINE = /^date\s+description\s+amount\s+debited\s+amount\s+c
 
 const normalizeCandidateLine = (line: string): string => {
   let normalized = line.replace(/\s+/g, ' ').trim();
+  const removedHeader = TABLE_HEADER_PREFIX.test(normalized) || TABLE_HEADER_INLINE.test(normalized);
   normalized = normalized.replace(TABLE_HEADER_PREFIX, '').replace(TABLE_HEADER_INLINE, '').trim();
 
   const dateIndex = normalized.search(DATE_ANYWHERE);
-  if (dateIndex > 0) {
+  // Only reposition to first date when the line had an inline page/table prefix.
+  // Continuation lines may legitimately contain dates (e.g. EREF/15-02-2026) and
+  // must stay attached to the current transaction.
+  if (removedHeader && dateIndex > 0) {
     normalized = normalized.slice(dateIndex).trim();
   }
 
