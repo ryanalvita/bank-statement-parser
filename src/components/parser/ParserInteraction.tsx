@@ -2,6 +2,8 @@ import { useState, type ChangeEvent } from 'react';
 import { extractPdfText } from '../../lib/pdf/extractPdfText';
 import { isAbnAmroStatement } from '../../lib/parsers/detectAbnAmro';
 import { extractCandidateTransactionLines } from '../../lib/parsers/extractCandidateTransactionLines';
+import { parseFullStatement } from '../../lib/parsers/parseFullStatement';
+import type { Transaction } from '../../lib/models/transaction';
 
 export default function ParserInteraction() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -10,6 +12,7 @@ export default function ParserInteraction() {
   const [error, setError] = useState('');
   const [showDebugText, setShowDebugText] = useState(false);
   const [candidateLines, setCandidateLines] = useState<string[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
@@ -17,6 +20,7 @@ export default function ParserInteraction() {
 
     setExtractedPages([]);
     setCandidateLines([]);
+    setTransactions([]);
     setError('');
 
     if (!file) {
@@ -40,7 +44,9 @@ export default function ParserInteraction() {
         return;
       }
 
-      setCandidateLines(extractCandidateTransactionLines(result.pages));
+      const lines = extractCandidateTransactionLines(result.pages);
+      setCandidateLines(lines);
+      setTransactions(parseFullStatement(lines));
     } catch {
       setError('Failed to extract text from PDF. Please try another file.');
     } finally {
@@ -65,6 +71,7 @@ export default function ParserInteraction() {
         <p>Selected file: {selectedFile?.name || 'None'}</p>
         <p>Extracted pages: {extractedPages.length}</p>
         <p>Candidate transaction lines: {candidateLines.length}</p>
+        <p>Parsed transactions: {transactions.length}</p>
         {isExtracting ? <p>Extracting text...</p> : null}
         {error ? <p className="text-red-700">{error}</p> : null}
       </div>
