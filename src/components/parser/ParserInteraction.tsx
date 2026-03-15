@@ -6,6 +6,7 @@ import { parseFullStatement } from '../../lib/parsers/parseFullStatement';
 import type { Transaction } from '../../lib/models/transaction';
 
 export default function ParserInteraction() {
+  const sampleFileName = 'mutov828136025_14022026-13032026.pdf';
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [extractedPages, setExtractedPages] = useState<string[]>([]);
   const [isExtracting, setIsExtracting] = useState(false);
@@ -72,6 +73,11 @@ export default function ParserInteraction() {
         <p>Extracted pages: {extractedPages.length}</p>
         <p>Candidate transaction lines: {candidateLines.length}</p>
         <p>Parsed transactions: {transactions.length}</p>
+        {selectedFile?.name === sampleFileName ? (
+          <p className={candidateLines.length > 0 ? 'text-green-700' : 'text-red-700'}>
+            Sample testcase ({sampleFileName}): {candidateLines.length > 0 ? 'PASS' : 'FAIL'}
+          </p>
+        ) : null}
         {isExtracting ? <p>Extracting text...</p> : null}
         {error ? <p className="text-red-700">{error}</p> : null}
       </div>

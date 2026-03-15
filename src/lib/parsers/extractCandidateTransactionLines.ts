@@ -1,5 +1,6 @@
-const TRANSACTION_HEADER_PATTERNS = [/\bdatum\b/i, /\bomschrijving\b/i, /\bbedrag\b/i];
-const TRANSACTION_LINE_START = /^(\d{2}-\d{2}(?:-\d{4})?)\b/;
+const HEADER_MARKERS = [/\bdatum\b/i, /\bomschrijving\b/i, /\bbedrag\b/i, /\bbij\b/i];
+const DATE_TOKEN = /\b\d{2}-\d{2}(?:-\d{4})?\b/;
+const AMOUNT_TOKEN = /[+-]?\s?\d{1,3}(?:\.\d{3})*,\d{2}\b/;
 
 const FOOTER_PATTERNS = [
   /^eindtotaal\b/i,
@@ -9,14 +10,27 @@ const FOOTER_PATTERNS = [
   /^pagina\s+\d+/i,
 ];
 
-const NOISE_PATTERNS = [/^abn\s*amro\b/i, /^iban\b/i, /^rekening(?:nummer)?\b/i, /^bic\b/i];
+const NOISE_PATTERNS = [
+  /^abn\s*amro\b/i,
+  /^iban\b/i,
+  /^rekening(?:nummer)?\b/i,
+  /^bic\b/i,
+  /^opening saldo\b/i,
+  /^vorig saldo\b/i,
+];
 
-const isHeaderLine = (line: string): boolean =>
-  TRANSACTION_HEADER_PATTERNS.every((pattern) => pattern.test(line));
+const isHeaderLine = (line: string): boolean => {
+  const score = HEADER_MARKERS.filter((pattern) => pattern.test(line)).length;
+  return score >= 2;
+};
 
 const isFooterLine = (line: string): boolean => FOOTER_PATTERNS.some((pattern) => pattern.test(line));
 
 const isNoiseLine = (line: string): boolean => NOISE_PATTERNS.some((pattern) => pattern.test(line));
+
+const looksLikeTransactionLine = (line: string): boolean => {
+  return DATE_TOKEN.test(line) && AMOUNT_TOKEN.test(line);
+};
 
 export const extractCandidateTransactionLines = (pages: string[]): string[] => {
   const lines = pages
@@ -28,9 +42,13 @@ export const extractCandidateTransactionLines = (pages: string[]): string[] => {
   let inTransactionSection = false;
 
   for (const line of lines) {
-    if (isHeaderLine(line)) {
+    if (isHeaderLine(line) || looksLikeTransactionLine(line)) {
       inTransactionSection = true;
-      continue;
+
+      if (looksLikeTransactionLine(line)) {
+        candidates.push(line);
+        continue;
+      }
     }
 
     if (!inTransactionSection) {
@@ -46,10 +64,16 @@ export const extractCandidateTransactionLines = (pages: string[]): string[] => {
       continue;
     }
 
-    if (TRANSACTION_LINE_START.test(line) || candidates.length > 0) {
+    if (looksLikeTransactionLine(line) || candidates.length > 0) {
       candidates.push(line);
     }
   }
 
-  return candidates;
+  if (candidates.length > 0) {
+    return candidates;
+  }
+
+  // Fallback path for unexpected statement layouts:
+  // keep any line that resembles a transaction.
+  return lines.filter(looksLikeTransactionLine);
 };
