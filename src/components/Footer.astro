@@ -3,98 +3,123 @@ import { Icon } from "astro-icon/components";
 ---
 
 <footer
-  id="support"
-  class="w-full py-12 px-4 border-t border-gray-200 bg-white"
-  role="contentinfo"
+	id="support"
+	class="w-full border-t border-gray-200 bg-gray-50"
+	role="contentinfo"
 >
-  <div class="max-w-6xl mx-auto">
-    <div class="grid md:grid-cols-3 gap-8 mb-8">
-      <div>
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Bank Statement Parser</h2>
-        <p class="text-gray-600">
-          Parse ABN AMRO statement PDFs in your browser and copy clean transaction
-          output to your spreadsheet.
-        </p>
-      </div>
-      <div>
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Links</h2>
-        <ul class="space-y-2">
-          <li>
-            <a
-              href="/feedback"
-              class="text-gray-600 hover:text-gray-900 transition-colors"
-              >Feedback</a
-            >
-          </li>
-          <li>
-            <a
-              href="/about"
-              class="text-gray-600 hover:text-gray-900 transition-colors"
-              >About</a
-            >
-          </li>
-          <li>
-            <a
-              href="/support"
-              class="text-gray-600 hover:text-gray-900 transition-colors"
-              >Support</a
-            >
-          </li>
-        </ul>
-      </div>
-      <div>
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Connect</h2>
-        <ul class="space-y-2">
-          <li>
-            <a
-              href="https://buymeacoffee.com/ryanalvita"
-              class="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Buy me a coffee (opens in new tab)"
-            >
-              <Icon name="tabler:coffee" class="w-5 h-5" aria-hidden="true" />
-              <span>Buy me a coffee</span></a
-            >
-          </li>
-          <li>
-            <a
-              href="https://linkedin.com/in/ryanalvita"
-              class="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Follow on LinkedIn (opens in new tab)"
-            >
-              <Icon name="tabler:brand-linkedin" class="w-5 h-5" aria-hidden="true" />
-              <span>LinkedIn</span></a
-            >
-          </li>
-          <li>
-            <a
-              href="https://github.com/ryanalvita"
-              class="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Visit GitHub profile (opens in new tab)"
-            >
-              <Icon name="tabler:brand-github" class="w-5 h-5" aria-hidden="true" />
-              <span>GitHub</span></a
-            >
-          </li>
-          <li>
-            <a
-              href="mailto:ryanalvita@gmail.com"
-              class="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              <Icon name="tabler:mail" class="w-5 h-5" aria-hidden="true" />
-              <span>Email</span></a
-            >
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="pt-8 border-t border-gray-200 text-center text-gray-600">
-      <p>&copy; {new Date().getFullYear()} Bank Statement Parser. All rights reserved.</p>
-    </div>
-  </div>
+	<div class="max-w-5xl mx-auto px-4 py-12">
+		<div class="grid gap-8 md:grid-cols-3">
+			<div>
+				<h2 class="text-lg font-semibold text-gray-900">
+					Bank Statement Parser
+				</h2>
+				<p class="mt-3 text-gray-600">
+					Parse bank statement PDFs and copy clean transactions into your
+					spreadsheet. Processed locally in your browser and never submitted.
+				</p>
+			</div>
+
+			<div>
+				<h2 class="text-lg font-semibold text-gray-900">Links</h2>
+				<ul class="mt-3 space-y-2">
+					<li>
+						<a
+							href="/"
+							class="text-gray-600 hover:text-gray-900 transition-colors"
+							>Home</a
+						>
+					</li>
+					<li>
+						<a
+							href="/about"
+							class="text-gray-600 hover:text-gray-900 transition-colors"
+							>About</a
+						>
+					</li>
+					<li>
+						<a
+							href="/feedback"
+							class="text-gray-600 hover:text-gray-900 transition-colors"
+							>Feedback</a
+						>
+					</li>
+					<li>
+						<a
+							href="/support"
+							class="text-gray-600 hover:text-gray-900 transition-colors"
+							>Support</a
+						>
+					</li>
+				</ul>
+			</div>
+
+			<div>
+				<h2 class="text-lg font-semibold text-gray-900">Connect</h2>
+				<ul class="mt-3 space-y-2">
+					<li>
+						<a
+							href="https://buymeacoffee.com/ryanalvita"
+							class="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+							target="_blank"
+							rel="noopener noreferrer"
+							aria-label="Buy me a coffee (opens in new tab)"
+						>
+							<Icon name="tabler:coffee" class="w-5 h-5" aria-hidden="true" />
+							<span>Buy me a coffee</span></a
+						>
+					</li>
+					<li>
+						<a
+							href="https://linkedin.com/in/ryanalvita"
+							class="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+							target="_blank"
+							rel="noopener noreferrer"
+							aria-label="Follow on LinkedIn (opens in new tab)"
+						>
+							<Icon
+								name="tabler:brand-linkedin"
+								class="w-5 h-5"
+								aria-hidden="true"
+							/>
+							<span>LinkedIn</span></a
+						>
+					</li>
+					<li>
+						<a
+							href="https://github.com/ryanalvita"
+							class="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+							target="_blank"
+							rel="noopener noreferrer"
+							aria-label="Visit GitHub profile (opens in new tab)"
+						>
+							<Icon
+								name="tabler:brand-github"
+								class="w-5 h-5"
+								aria-hidden="true"
+							/>
+							<span>GitHub</span></a
+						>
+					</li>
+					<li>
+						<a
+							href="mailto:ryanalvita@gmail.com"
+							class="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+						>
+							<Icon name="tabler:mail" class="w-5 h-5" aria-hidden="true" />
+							<span>Email</span></a
+						>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div
+			class="mt-10 pt-6 border-t border-gray-200 text-sm text-gray-600 flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
+		>
+			<p>
+				&copy; {new Date().getFullYear()} Bank Statement Parser. All rights reserved.
+			</p>
+			<p>Built for safer, faster statement-to-spreadsheet workflows.</p>
+		</div>
+	</div>
 </footer>
