@@ -2,6 +2,24 @@
 
 A minimal, modern starter template for building fast websites with Astro. This template includes everything you need to get started with a beautiful landing page, complete with animations, icons, and content management capabilities.
 
+## Bank Statement Parser Foundation (PBI-001)
+
+This project is based on [`jonnysmillie/astro-base`](https://github.com/jonnysmillie/astro-base) and keeps the existing Astro + React + Tailwind setup as the initial foundation.
+
+Current structure understanding (brief):
+
+- `src/layouts/Layout.astro`: shared page layout and SEO/meta tags
+- `src/pages/*`: route-level pages (homepage and template/demo pages)
+- `src/components/*`: reusable UI components from the base template
+- `src/styles/global.css`: global Tailwind styles
+
+Local run commands:
+
+```bash
+npm install
+npm run dev
+```
+
 ## ✨ Features
 
 - **🚀 Astro** - Lightning-fast static site generation
@@ -78,7 +96,7 @@ A minimal, modern starter template for building fast websites with Astro. This t
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 22.12.0+
 - npm, pnpm, or yarn
 
 ### Installation
