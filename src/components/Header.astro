@@ -53,7 +53,7 @@ const isCurrent = (path) => currentPath === normalizePath(path);
 					class="text-gray-600 hover:text-gray-900 transition-colors"
 					aria-current={isCurrent("/bank-statement-parser/about") ? "page" : undefined}
 				>
-					About
+					FAQ
 				</a>
 			</li>
 			<li>
@@ -87,12 +87,12 @@ const isCurrent = (path) => currentPath === normalizePath(path);
 		<ul class="flex flex-col py-4" role="list">
 			<li>
 				<a
-					href="/bank-statement-parser/feedback"
+					href="/bank-statement-parser"
 					class="block px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
 					role="menuitem"
-					aria-current={isCurrent("/bank-statement-parser/feedback") ? "page" : undefined}
+					aria-current={isCurrent("/bank-statement-parser") ? "page" : undefined}
 				>
-					Feedback
+					Home
 				</a>
 			</li>
 			<li>
@@ -102,7 +102,17 @@ const isCurrent = (path) => currentPath === normalizePath(path);
 					role="menuitem"
 					aria-current={isCurrent("/bank-statement-parser/about") ? "page" : undefined}
 				>
-					About
+					FAQ
+				</a>
+			</li>
+			<li>
+				<a
+					href="/bank-statement-parser/feedback"
+					class="block px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+					role="menuitem"
+					aria-current={isCurrent("/bank-statement-parser/feedback") ? "page" : undefined}
+				>
+					Feedback
 				</a>
 			</li>
 			<li>
